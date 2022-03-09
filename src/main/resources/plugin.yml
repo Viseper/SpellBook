@@ -1,0 +1,6 @@
+name: SpellBook
+version: '${project.version}'
+main: me.viseper.spellbook.SpellBook
+api-version: 1.18
+authors: [ Viseper ]
+description: A book that allows you to cast spells from it.
