@@ -30,8 +30,14 @@ public class MagicMissiles implements CommandExecutor {
         World world = player.getWorld();
         List<Arrow> arrows = new ArrayList<Arrow>();
         for (int i = 0; i < missileNumber; i++) {
-            Arrow arrow = (Arrow) world.spawnEntity(new Location(world, player.getLocation().getX(), player.getLocation().getY() + 2, player.getLocation().getZ()), EntityType.ARROW);
+            Arrow arrow = (Arrow) world.spawnEntity(new Location(world, player.getLocation().getX(), player.getLocation().getY() + 1, player.getLocation().getZ()), EntityType.ARROW);
             arrow.setVelocity(player.getLocation().getDirection().multiply(new Vector(Math.random() * 2 + 1, Math.random() * 2 + 1, Math.random() * 2 + 1)));
+            List<Entity> nearest = arrow.getNearbyEntities(8,5,8);
+            for (Entity target: nearest) {
+                if(player.hasLineOfSight(target) && target instanceof LivingEntity && !target.isDead() && target != player) {
+                    arrow.setVelocity(target.getLocation().toVector().subtract(arrow.getLocation().toVector().add(new Vector(0,-1,0))).normalize());
+                }
+            }
             arrow.addScoreboardTag("missile");
             arrows.add(arrow);
             player.hideEntity(player.getServer().getPluginManager().getPlugin("SpellBook"), arrow);
@@ -43,10 +49,10 @@ public class MagicMissiles implements CommandExecutor {
                     if(arrow.isInBlock() || arrow.isDead()) {
                         cancel();
                     } else {
-                        List<Entity> nearest = arrow.getNearbyEntities(20,20,20);
+                        List<Entity> nearest = arrow.getNearbyEntities(8,5,8);
                         for (Entity target: nearest) {
                             if(player.hasLineOfSight(target) && target instanceof LivingEntity && !target.isDead() && target != player) {
-                                arrow.setVelocity(target.getLocation().toVector().subtract(arrow.getLocation().toVector().add(new Vector(0,1,0))).normalize());
+                                arrow.setVelocity(target.getLocation().toVector().subtract(arrow.getLocation().toVector().add(new Vector(0,-1,0))).normalize());
                             }
                         }
                     }
