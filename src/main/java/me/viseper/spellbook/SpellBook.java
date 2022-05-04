@@ -11,8 +11,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class SpellBook extends JavaPlugin {
 
+
+
+    private static SpellBook plugin;
+
     @Override
     public void onEnable() {
+        plugin = this;
         // Simple statement of project purpose.
         System.out.println("Welcome to the book of spells plug-in made by Viseper.");
         //basic declaration of the book
@@ -49,12 +54,18 @@ public final class SpellBook extends JavaPlugin {
         bookRecipe.setIngredient('L', Material.LEATHER);
 
         Bukkit.addRecipe(bookRecipe);
+        //set up of wands
+        getServer().getPluginManager().registerEvents(new MagicWands(), this);
+        MagicWands mw = new MagicWands();
+        getServer().addRecipe(mw.missileRecipe());
 
 
 
     }
 
-
+    public static SpellBook getPlugin() {
+        return plugin;
+    }
 
 
 }
