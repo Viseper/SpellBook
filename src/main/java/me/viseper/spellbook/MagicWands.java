@@ -1,6 +1,8 @@
 package me.viseper.spellbook;
 
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,7 +14,20 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.HashMap;
+import java.util.UUID;
+
 public class MagicWands implements Listener {
+
+    //key = uuid of player
+    //long = time since command was ran
+    private final HashMap<UUID, Long> cooldownM;
+    private final HashMap<UUID, Long> cooldownF;
+
+    public MagicWands() {
+        this.cooldownM = new HashMap<>();
+        this.cooldownF = new HashMap<>();
+    }
 
     public ShapedRecipe missileRecipe() {
         ItemStack wand = new ItemStack(Material.STICK);
@@ -27,12 +42,52 @@ public class MagicWands implements Listener {
         missileRecipe.setIngredient('G', Material.GLOW_INK_SAC);
         return missileRecipe;
     }
-
+    public ShapedRecipe fireballRecipe() {
+        ItemStack wand = new ItemStack(Material.STICK);
+        ItemMeta meta = wand.getItemMeta();
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        data.set(new NamespacedKey(SpellBook.getPlugin(), "missile"), PersistentDataType.STRING, "missileF");
+        meta.setDisplayName("Fireball");
+        wand.setItemMeta(meta);
+        NamespacedKey key = new NamespacedKey(SpellBook.getPlugin(), "fireball_wand");
+        ShapedRecipe fireballRecipe = new ShapedRecipe(key, wand);
+        fireballRecipe.shape("  B"," B ","B  ");
+        fireballRecipe.setIngredient('B', Material.BLAZE_POWDER);
+        return fireballRecipe;
+    }
     @EventHandler
     public void onPlayerClick(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if(event.getAction() == Action.RIGHT_CLICK_AIR && event.getItem().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(SpellBook.getPlugin(), "missile"), PersistentDataType.STRING) == "missileW") {
-            player.performCommand("magicmissiles");
+        World world = player.getWorld();
+        if(!this.cooldownM.containsKey(player.getUniqueId()) || !this.cooldownF.containsKey(player.getUniqueId())) {
+            this.cooldownM.put(player.getUniqueId(), System.currentTimeMillis());
+            this.cooldownF.put(player.getUniqueId(), System.currentTimeMillis());
+        }
+        long timeElapsedM = System.currentTimeMillis() - cooldownM.get(player.getUniqueId());
+        long timeElapsedF = System.currentTimeMillis() - cooldownF.get(player.getUniqueId());
+
+        if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if (event.getItem().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(SpellBook.getPlugin(), "missile"), PersistentDataType.STRING) == "missileW") {
+                if(timeElapsedM >= 500) {
+                    player.performCommand("magicmissiles");
+                    player.sendMessage("Magic Missiles!");
+                    this.cooldownM.put(player.getUniqueId(), System.currentTimeMillis());
+                }else {
+                    player.sendMessage("Magic Missile is currently on cooldown.");
+                }
+            }else if(event.getItem().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(SpellBook.getPlugin(), "missile"), PersistentDataType.STRING) == "missileF") {
+                if(timeElapsedF >= 5000){
+                    int explosivePower = 3;
+                    Fireball fireball = (Fireball) world.spawnEntity(new Location(world, player.getLocation().getX(),player.getLocation().getY() + 1, player.getLocation().getZ()), EntityType.FIREBALL);
+                    fireball.setYield(explosivePower);
+                    fireball.setVelocity(player.getLocation().getDirection());
+                    fireball.setDirection(player.getLocation().getDirection());
+                    player.sendMessage("Fireball!");
+                    this.cooldownF.put(player.getUniqueId(), System.currentTimeMillis());
+                }else {
+                    player.sendMessage("Fireball is currently on cooldown.");
+                }
+            }
         }
     }
 

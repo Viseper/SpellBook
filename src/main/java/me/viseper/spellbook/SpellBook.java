@@ -58,6 +58,7 @@ public final class SpellBook extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MagicWands(), this);
         MagicWands mw = new MagicWands();
         getServer().addRecipe(mw.missileRecipe());
+        getServer().addRecipe(mw.fireballRecipe());
 
 
 
