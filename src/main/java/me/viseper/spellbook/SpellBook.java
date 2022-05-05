@@ -26,6 +26,7 @@ public final class SpellBook extends JavaPlugin {
 
         //set up of spells
         this.getCommand("magicMissiles").setExecutor(new MagicMissiles());
+        this.getCommand("shockwave").setExecutor(new Shockwave());
         //set up of the book
         //Example for future reference.
                 //BaseComponent[] page1 = new ComponentBuilder().append("Your Text Here").event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kill @e[type=!player]")).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("This text shall kill everything.").create())).create();

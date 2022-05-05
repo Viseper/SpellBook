@@ -8,3 +8,6 @@ commands:
   magicMissiles:
     description: Summons a bolt of water
     usage: /magicMissiles
+  shockwave:
+    description: Creates a shockwave that sends all nearby entities flying away from you
+    usage: /shockwave
