@@ -55,6 +55,20 @@ public class MagicWands implements Listener {
         fireballRecipe.setIngredient('B', Material.BLAZE_POWDER);
         return fireballRecipe;
     }
+
+    public ShapedRecipe shockwaveRecipe() {
+        ItemStack wand = new ItemStack(Material.STICK);
+        ItemMeta meta = wand.getItemMeta();
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        data.set(new NamespacedKey(SpellBook.getPlugin(), "shockwave"), PersistentDataType.STRING, "shockwave");
+        meta.setDisplayName("Shockwave");
+        wand.setItemMeta(meta);
+        NamespacedKey key = new NamespacedKey(SpellBook.getPlugin(), "shockwave_wand");
+        ShapedRecipe shockwaveRecipe = new ShapedRecipe(key, wand);
+        shockwaveRecipe.shape(" A "," A "," A ");
+        shockwaveRecipe.setIngredient('A', Material.AMETHYST_SHARD);
+        return shockwaveRecipe;
+    }
     @EventHandler
     public void onPlayerClick(PlayerInteractEvent event) {
         Player player = event.getPlayer();
@@ -65,29 +79,34 @@ public class MagicWands implements Listener {
         }
         long timeElapsedM = System.currentTimeMillis() - cooldownM.get(player.getUniqueId());
         long timeElapsedF = System.currentTimeMillis() - cooldownF.get(player.getUniqueId());
-
+        if(event.getItem() != null) {
         if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             if (event.getItem().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(SpellBook.getPlugin(), "missile"), PersistentDataType.STRING) == "missileW") {
-                if(timeElapsedM >= 500) {
+                if (timeElapsedM >= 500) {
                     player.performCommand("magicmissiles");
                     player.sendMessage("Magic Missiles!");
                     this.cooldownM.put(player.getUniqueId(), System.currentTimeMillis());
-                }else {
+                } else {
                     player.sendMessage("Magic Missile is currently on cooldown.");
                 }
-            }else if(event.getItem().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(SpellBook.getPlugin(), "missile"), PersistentDataType.STRING) == "missileF") {
-                if(timeElapsedF >= 5000){
+            } else if (event.getItem().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(SpellBook.getPlugin(), "missile"), PersistentDataType.STRING) == "missileF") {
+                if (timeElapsedF >= 5000) {
                     int explosivePower = 3;
-                    Fireball fireball = (Fireball) world.spawnEntity(new Location(world, player.getLocation().getX(),player.getLocation().getY() + 1, player.getLocation().getZ()), EntityType.FIREBALL);
+                    Fireball fireball = (Fireball) world.spawnEntity(new Location(world, player.getLocation().getX(), player.getLocation().getY() + 1, player.getLocation().getZ()), EntityType.FIREBALL);
                     fireball.setYield(explosivePower);
                     fireball.setVelocity(player.getLocation().getDirection());
                     fireball.setDirection(player.getLocation().getDirection());
                     player.sendMessage("Fireball!");
                     this.cooldownF.put(player.getUniqueId(), System.currentTimeMillis());
-                }else {
+                } else {
                     player.sendMessage("Fireball is currently on cooldown.");
                 }
+            } else if (event.getItem().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(SpellBook.getPlugin(), "shockwave"), PersistentDataType.STRING) == "shockwave") {
+                player.performCommand("shockwave");
+                player.sendMessage("Shockwave!");
+                //this.cooldownM.put(player.getUniqueId(), System.currentTimeMillis());
             }
+        }
         }
     }
 
