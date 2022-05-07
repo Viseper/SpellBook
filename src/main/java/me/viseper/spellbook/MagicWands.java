@@ -23,10 +23,12 @@ public class MagicWands implements Listener {
     //long = time since command was ran
     private final HashMap<UUID, Long> cooldownM;
     private final HashMap<UUID, Long> cooldownF;
+    private final HashMap<UUID, Long> cooldownS;
 
     public MagicWands() {
         this.cooldownM = new HashMap<>();
         this.cooldownF = new HashMap<>();
+        this.cooldownS = new HashMap<>();
     }
 
     public ShapedRecipe missileRecipe() {
@@ -69,16 +71,33 @@ public class MagicWands implements Listener {
         shockwaveRecipe.setIngredient('A', Material.AMETHYST_SHARD);
         return shockwaveRecipe;
     }
+
+    public ShapedRecipe shieldRecipe() {
+        ItemStack wand = new ItemStack(Material.STICK);
+        ItemMeta meta = wand.getItemMeta();
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        data.set(new NamespacedKey(SpellBook.getPlugin(), "shield"), PersistentDataType.STRING, "shield");
+        meta.setDisplayName("Shield");
+        wand.setItemMeta(meta);
+        NamespacedKey key = new NamespacedKey(SpellBook.getPlugin(), "shield_wand");
+        ShapedRecipe shieldRecipe = new ShapedRecipe(key, wand);
+        shieldRecipe.shape(" A "," A "," A ");
+        shieldRecipe.setIngredient('A', Material.END_CRYSTAL);
+        return shieldRecipe;
+    }
+
     @EventHandler
     public void onPlayerClick(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         World world = player.getWorld();
-        if(!this.cooldownM.containsKey(player.getUniqueId()) || !this.cooldownF.containsKey(player.getUniqueId())) {
+        if(!this.cooldownM.containsKey(player.getUniqueId()) || !this.cooldownF.containsKey(player.getUniqueId()) || !this.cooldownS.containsKey(player.getUniqueId())) {
             this.cooldownM.put(player.getUniqueId(), System.currentTimeMillis());
             this.cooldownF.put(player.getUniqueId(), System.currentTimeMillis());
+            this.cooldownS.put(player.getUniqueId(), System.currentTimeMillis());
         }
         long timeElapsedM = System.currentTimeMillis() - cooldownM.get(player.getUniqueId());
         long timeElapsedF = System.currentTimeMillis() - cooldownF.get(player.getUniqueId());
+        long timeElapsedS = System.currentTimeMillis() - cooldownS.get(player.getUniqueId());
         if(event.getItem() != null) {
         if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             if (event.getItem().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(SpellBook.getPlugin(), "missile"), PersistentDataType.STRING) == "missileW") {
@@ -105,6 +124,14 @@ public class MagicWands implements Listener {
                 player.performCommand("shockwave");
                 player.sendMessage("Shockwave!");
                 //this.cooldownM.put(player.getUniqueId(), System.currentTimeMillis());
+            } else if (event.getItem().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(SpellBook.getPlugin(), "shield"), PersistentDataType.STRING) == "shield") {
+                if(timeElapsedS >= 10000) {
+                    player.performCommand("shield");
+                    player.sendMessage("Shield Activated!");
+                    this.cooldownS.put(player.getUniqueId(), System.currentTimeMillis());
+                } else {
+                    player.sendMessage("Shield On cooldown, please wait.");
+                }
             }
         }
         }

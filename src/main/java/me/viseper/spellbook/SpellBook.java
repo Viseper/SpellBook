@@ -27,6 +27,7 @@ public final class SpellBook extends JavaPlugin {
         //set up of spells
         this.getCommand("magicMissiles").setExecutor(new MagicMissiles());
         this.getCommand("shockwave").setExecutor(new Shockwave());
+        this.getCommand("shield").setExecutor(new Shield());
         //set up of the book
         //Example for future reference.
                 //BaseComponent[] page1 = new ComponentBuilder().append("Your Text Here").event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kill @e[type=!player]")).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("This text shall kill everything.").create())).create();
@@ -39,12 +40,14 @@ public final class SpellBook extends JavaPlugin {
         //BaseComponent[] page5 = new ComponentBuilder("Doomsday").color(ChatColor.DARK_RED).append("\n\nThis will kill you. There is no escaping this fireball. This spell will end everything. You, your allies, and your enemies. Do not use!").color(ChatColor.RESET).append("\n\nEnd everything").color(ChatColor.DARK_AQUA).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/summon minecraft:fireball ~ ~1 ~ {ExplosionPower:127}")).create();
         BaseComponent[] page4 = new ComponentBuilder("Magic Missiles").color(ChatColor.AQUA).append("\n\nSummons an array of magic missiles.").color(ChatColor.RESET).append("\n\nActivate Spell").color(ChatColor.DARK_AQUA).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/magicMissiles")).create();
         BaseComponent[] page5 = new ComponentBuilder("Shockwave").color(ChatColor.AQUA).append("\n\nCreates a shockwave knocking all enemies away from you.").color(ChatColor.RESET).append("\n\nActivate Spell").color(ChatColor.DARK_AQUA).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/shockwave")).create();
+        BaseComponent[] page6 = new ComponentBuilder("Shield").color(ChatColor.AQUA).append("\n\nCreates a cube of obsidian around you for 5 seconds").color(ChatColor.RESET).append("\n\nDeploy Shield!").color(ChatColor.DARK_AQUA).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/shockwave")).create();
 
         bookMeta.spigot().addPage(page1);
         bookMeta.spigot().addPage(page2);
         bookMeta.spigot().addPage(page3);
         bookMeta.spigot().addPage(page4);
         bookMeta.spigot().addPage(page5);
+        bookMeta.spigot().addPage(page6);
         bookMeta.setAuthor("Viseper");
         bookMeta.setTitle("The Book of Spells");
         book.setItemMeta(bookMeta);
@@ -63,6 +66,7 @@ public final class SpellBook extends JavaPlugin {
         getServer().addRecipe(mw.missileRecipe());
         getServer().addRecipe(mw.fireballRecipe());
         getServer().addRecipe(mw.shockwaveRecipe());
+        getServer().addRecipe(mw.shieldRecipe());
 
 
 

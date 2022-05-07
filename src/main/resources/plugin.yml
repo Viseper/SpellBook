@@ -11,3 +11,6 @@ commands:
   shockwave:
     description: Creates a shockwave that sends all nearby entities flying away from you
     usage: /shockwave
+  shield:
+    description: Creates a box of obsidian around you for 5 seconds
+    usage: /shield
