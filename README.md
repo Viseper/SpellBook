@@ -7,15 +7,14 @@ This plug-in mostly focuses on the creating of a single extremely powerful spell
 
 To do:
 +Add 5 more spells
-+Fix shield spell deleting containers inventories
 +Add custom models to the 'wands'
 
 
 Completed:
-+Create a spellbook to contain spells
-+Added the fireball spell
-+Added the magic missiles spell
-+Added wands
-+Added the shockwave spell
-+Added the shield spell
-+
+-Create a spellbook to contain spells
+-Added the fireball spell
+-Added the magic missiles spell
+-Added wands
+-Added the shockwave spell
+-Added the shield spell
+-
