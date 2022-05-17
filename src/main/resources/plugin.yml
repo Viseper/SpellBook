@@ -14,3 +14,6 @@ commands:
   shield:
     description: Creates a box of obsidian around you for 5 seconds
     usage: /shield
+  sprint:
+    description: Gives yourself a short boost in speed, some resistance, and saturation however you can not cast spells or attack while this is active
+    usage: /sprint

@@ -26,6 +26,10 @@ public class MagicMissiles implements CommandExecutor {
             System.out.println("Only a player can use this command");
             return true;
         }
+        if (player.getScoreboardTags().contains("Sprint")) {
+            player.sendMessage("Can't cast this spell while Sprint is active.");
+            return true;
+        }
         int missileNumber = (int) Math.floor(Math.random() * 10) + 1;
         World world = player.getWorld();
         List<Arrow> arrows = new ArrayList<Arrow>();

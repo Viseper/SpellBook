@@ -30,6 +30,10 @@ public class Shockwave implements CommandExecutor {
             System.out.print("Only a player can use this ability.");
             return true;
         }
+        if (player.getScoreboardTags().contains("Sprint")) {
+            player.sendMessage("Can't cast this spell while Sprint is active.");
+            return true;
+        }
         World world = player.getWorld();
         List<Entity> nearest = player.getNearbyEntities(10,20,10);
         player.setVelocity(player.getVelocity().setY(1));

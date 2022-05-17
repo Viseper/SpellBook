@@ -34,6 +34,10 @@ public class Shield implements CommandExecutor {
             System.out.print("Only a player can cast this spell.");
             return true;
         }
+        if (player.getScoreboardTags().contains("Sprint")) {
+            player.sendMessage("Can't cast this spell while Sprint is active.");
+            return true;
+        }
         World world = player.getWorld();
         Material[] materials = new Material[6 * (5 * 2)];
         Location l = player.getLocation();
@@ -80,7 +84,11 @@ public class Shield implements CommandExecutor {
             }
         }
         start.add(0,-1,0).getBlock().setType(Material.OBSIDIAN);
-        start.add(0,1,0);
+        start.add(-1,0,0).getBlock().setType(Material.OBSIDIAN);
+        start.add(2,0,0).getBlock().setType(Material.OBSIDIAN);
+        start.add(-1,0,-1).getBlock().setType(Material.OBSIDIAN);
+        start.add(0,0,2).getBlock().setType(Material.OBSIDIAN);
+        start.add(0,1,-1);
         return blocks;
     }
 
