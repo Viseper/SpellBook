@@ -38,7 +38,7 @@ public final class SpellBook extends JavaPlugin implements Listener {
         //Example for future reference.
                 //BaseComponent[] page1 = new ComponentBuilder().append("Your Text Here").event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kill @e[type=!player]")).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("This text shall kill everything.").create())).create();
         BaseComponent[] page1 = new ComponentBuilder("Welcome to the ancient book of spells.").color(ChatColor.DARK_PURPLE).append("\n \n \n \n").append("Written by ").append("Viseper").obfuscated(true).create();
-        BaseComponent[] page2 = new ComponentBuilder("SpellBook Contents").color(ChatColor.GOLD).append("\nFireball").color(ChatColor.RESET).event(new ClickEvent(ClickEvent.Action.CHANGE_PAGE, "3")).append("\nMagic Missiles").event(new ClickEvent(ClickEvent.Action.CHANGE_PAGE, "4")).append("\nShockwave").event(new ClickEvent(ClickEvent.Action.CHANGE_PAGE, "5")).append("\nShield").event(new ClickEvent(ClickEvent.Action.CHANGE_PAGE, "6")).create();
+        BaseComponent[] page2 = new ComponentBuilder("SpellBook Contents").color(ChatColor.GOLD).append("\nFireball").color(ChatColor.RESET).event(new ClickEvent(ClickEvent.Action.CHANGE_PAGE, "3")).append("\nMagic Missiles").event(new ClickEvent(ClickEvent.Action.CHANGE_PAGE, "4")).append("\nShockwave").event(new ClickEvent(ClickEvent.Action.CHANGE_PAGE, "5")).append("\nShield").event(new ClickEvent(ClickEvent.Action.CHANGE_PAGE, "6")).append("\nSprint").event(new ClickEvent(ClickEvent.Action.CHANGE_PAGE, "7")).create();
         BaseComponent[] page3 = new ComponentBuilder("Fireball").color(ChatColor.DARK_RED).append("\n\n A decently powerful spell that summons a ball of fire.").color(ChatColor.RESET).append("\n\nSummon").color(ChatColor.DARK_AQUA).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/summon minecraft:fireball ~ ~1 ~ {ExplosionPower:10}")).create();
         //ignore
         //BaseComponent[] page4 = new ComponentBuilder("Level 3 Fireball").color(ChatColor.DARK_RED).append("\n\n A very  more complex spell that does a very complex thing. Summons a massive fireball that could do some serious damage.").color(ChatColor.RESET).append("\n\nSummon").color(ChatColor.DARK_AQUA).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/summon minecraft:fireball ~ ~1 ~ {ExplosionPower:10}")).create();
@@ -47,6 +47,7 @@ public final class SpellBook extends JavaPlugin implements Listener {
         BaseComponent[] page4 = new ComponentBuilder("Magic Missiles").color(ChatColor.AQUA).append("\n\nSummons an array of magic missiles.").color(ChatColor.RESET).append("\n\nActivate Spell").color(ChatColor.DARK_AQUA).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/magicMissiles")).create();
         BaseComponent[] page5 = new ComponentBuilder("Shockwave").color(ChatColor.AQUA).append("\n\nCreates a shockwave knocking all enemies away from you.").color(ChatColor.RESET).append("\n\nActivate Spell").color(ChatColor.DARK_AQUA).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/shockwave")).create();
         BaseComponent[] page6 = new ComponentBuilder("Shield").color(ChatColor.AQUA).append("\n\nCreates a cube of obsidian around you for 5 seconds").color(ChatColor.RESET).append("\n\nDeploy Shield!").color(ChatColor.DARK_AQUA).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/shield")).create();
+        BaseComponent[] page7 = new ComponentBuilder("Sprint").color(ChatColor.AQUA).append("\n\nGives a boost of speed that can save your life in a pinch.").color(ChatColor.RESET).append("\n\nRun!").color(ChatColor.DARK_AQUA).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sprint 1")).create();
 
         bookMeta.spigot().addPage(page1);
         bookMeta.spigot().addPage(page2);
@@ -54,6 +55,7 @@ public final class SpellBook extends JavaPlugin implements Listener {
         bookMeta.spigot().addPage(page4);
         bookMeta.spigot().addPage(page5);
         bookMeta.spigot().addPage(page6);
+        bookMeta.spigot().addPage(page7);
         bookMeta.setAuthor("Unknown");
         bookMeta.setTitle("The Book of Spells");
         book.setItemMeta(bookMeta);
@@ -73,6 +75,7 @@ public final class SpellBook extends JavaPlugin implements Listener {
         getServer().addRecipe(mw.fireballRecipe());
         getServer().addRecipe(mw.shockwaveRecipe());
         getServer().addRecipe(mw.shieldRecipe());
+        getServer().addRecipe(mw.sprintRecipe());
 
 
     }

@@ -24,11 +24,12 @@ public class MagicWands implements Listener {
     private final HashMap<UUID, Long> cooldownM;
     private final HashMap<UUID, Long> cooldownF;
     private final HashMap<UUID, Long> cooldownS;
-
+    private final HashMap<UUID, Long> cooldownR;
     public MagicWands() {
         this.cooldownM = new HashMap<>();
         this.cooldownF = new HashMap<>();
         this.cooldownS = new HashMap<>();
+        this.cooldownR = new HashMap<>();
     }
 
     public ShapedRecipe missileRecipe() {
@@ -48,7 +49,7 @@ public class MagicWands implements Listener {
         ItemStack wand = new ItemStack(Material.STICK);
         ItemMeta meta = wand.getItemMeta();
         PersistentDataContainer data = meta.getPersistentDataContainer();
-        data.set(new NamespacedKey(SpellBook.getPlugin(), "missile"), PersistentDataType.STRING, "missileF");
+        data.set(new NamespacedKey(SpellBook.getPlugin(), "fireball"), PersistentDataType.STRING, "missileF");
         meta.setDisplayName("Fireball");
         wand.setItemMeta(meta);
         NamespacedKey key = new NamespacedKey(SpellBook.getPlugin(), "fireball_wand");
@@ -86,6 +87,19 @@ public class MagicWands implements Listener {
         return shieldRecipe;
     }
 
+    public ShapedRecipe sprintRecipe() {
+        ItemStack wand = new ItemStack(Material.STICK);
+        ItemMeta meta = wand.getItemMeta();
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        data.set(new NamespacedKey(SpellBook.getPlugin(), "sprint"), PersistentDataType.STRING, "sprint");
+        meta.setDisplayName("Sprint");
+        wand.setItemMeta(meta);
+        NamespacedKey key = new NamespacedKey(SpellBook.getPlugin(), "sprint_wand");
+        ShapedRecipe sprintRecipe = new ShapedRecipe(key, wand);
+        sprintRecipe.shape(" A "," A "," A ");
+        sprintRecipe.setIngredient('A', Material.POTION, 8194);
+        return sprintRecipe;
+    }
     @EventHandler
     public void onPlayerClick(PlayerInteractEvent event) {
         Player player = event.getPlayer();
@@ -94,13 +108,15 @@ public class MagicWands implements Listener {
             this.cooldownM.put(player.getUniqueId(), System.currentTimeMillis());
             this.cooldownF.put(player.getUniqueId(), System.currentTimeMillis());
             this.cooldownS.put(player.getUniqueId(), System.currentTimeMillis());
+            this.cooldownR.put(player.getUniqueId(), System.currentTimeMillis());
         }
         long timeElapsedM = System.currentTimeMillis() - cooldownM.get(player.getUniqueId());
         long timeElapsedF = System.currentTimeMillis() - cooldownF.get(player.getUniqueId());
         long timeElapsedS = System.currentTimeMillis() - cooldownS.get(player.getUniqueId());
+        long timeElapsedR = System.currentTimeMillis() - cooldownR.get(player.getUniqueId());
         if(event.getItem() != null) {
         if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (event.getItem().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(SpellBook.getPlugin(), "missile"), PersistentDataType.STRING) == "missileW") {
+            if (event.getItem().getItemMeta().getPersistentDataContainer().has(new NamespacedKey(SpellBook.getPlugin(), "missile"), PersistentDataType.STRING)) {
                 if (timeElapsedM >= 500) {
                     player.performCommand("magicmissiles");
                     player.sendMessage("Magic Missiles!");
@@ -108,7 +124,7 @@ public class MagicWands implements Listener {
                 } else {
                     player.sendMessage("Magic Missile is currently on cooldown.");
                 }
-            } else if (event.getItem().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(SpellBook.getPlugin(), "missile"), PersistentDataType.STRING) == "missileF") {
+            } else if (event.getItem().getItemMeta().getPersistentDataContainer().has(new NamespacedKey(SpellBook.getPlugin(), "fireball"), PersistentDataType.STRING) && !player.getScoreboardTags().contains("Sprint")) {
                 if (timeElapsedF >= 5000) {
                     int explosivePower = 3;
                     Fireball fireball = (Fireball) world.spawnEntity(new Location(world, player.getLocation().getX(), player.getLocation().getY() + 1, player.getLocation().getZ()), EntityType.FIREBALL);
@@ -120,17 +136,25 @@ public class MagicWands implements Listener {
                 } else {
                     player.sendMessage("Fireball is currently on cooldown.");
                 }
-            } else if (event.getItem().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(SpellBook.getPlugin(), "shockwave"), PersistentDataType.STRING) == "shockwave") {
+            } else if (event.getItem().getItemMeta().getPersistentDataContainer().has(new NamespacedKey(SpellBook.getPlugin(), "shockwave"), PersistentDataType.STRING)) {
                 player.performCommand("shockwave");
                 player.sendMessage("Shockwave!");
                 //this.cooldownM.put(player.getUniqueId(), System.currentTimeMillis());
-            } else if (event.getItem().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(SpellBook.getPlugin(), "shield"), PersistentDataType.STRING) == "shield") {
+            } else if (event.getItem().getItemMeta().getPersistentDataContainer().has(new NamespacedKey(SpellBook.getPlugin(), "shield"), PersistentDataType.STRING)) {
                 if(timeElapsedS >= 10000) {
                     player.performCommand("shield");
                     player.sendMessage("Shield Activated!");
                     this.cooldownS.put(player.getUniqueId(), System.currentTimeMillis());
                 } else {
                     player.sendMessage("Shield On cooldown, please wait.");
+                }
+            } else if (event.getItem().getItemMeta().getPersistentDataContainer().has(new NamespacedKey(SpellBook.getPlugin(), "sprint"), PersistentDataType.STRING)) {
+                if(timeElapsedR >= 20000) {
+                    player.performCommand("sprint");
+                    player.sendMessage("Run!");
+                    this.cooldownR.put(player.getUniqueId(), System.currentTimeMillis());
+                } else {
+                    player.sendMessage("Sprint On cooldown, please wait.");
                 }
             }
         }
